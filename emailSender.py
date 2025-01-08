@@ -51,25 +51,30 @@ class EmailSender:
         self.smtp = None
 
     def read_ini(self):
+        try:
+            strININame = os.path.basename(__file__).split('.')[0]
+            strINIPath = f'./INI/{strININame}.ini'
+            config = configparser.ConfigParser()
+            config.read(strINIPath)
 
-        strININame = os.path.basename(__file__).split('.')[0]
-        strINIPath = f'./INI/{strININame}.ini'
-        config = configparser.ConfigParser()
-        config.read(strINIPath)
+            self.account = config.get('login', 'account')
+            self.password = config.get('login', 'password')
+            self.smtpSever = config.get('smtp', 'smtpSever')            
+            self.smtpPortr = config.get('smtp', 'smtpPort')
+        except Exception as e:
+            print(e)
 
-        self.account = config.get('login', 'account')
-        self.password = config.get('login', 'password')
-        self.smtpSever = config.get('smtp', 'smtpSever')            
-        self.smtpPortr = config.get('smtp', 'smtpPort')
 
     def smtp_connect(self):
-
-        smtp = smtplib.SMTP(self.smtpSever, self.smtpPort)
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.login(self.account, self.password)
-        self.smtp = smtp
-
+        try:
+            smtp = smtplib.SMTP(self.smtpSever, self.smtpPort)
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.login(self.account, self.password)
+            self.smtp = smtp
+        except Exception as e:
+            print(e)
+            
     def send_email(self):
         
         # smtp = smtplib.SMTP('smtp.gmail.com', 587)
@@ -106,3 +111,5 @@ class EmailSender:
     
         self.smtp.quit()        
         
+if __name__ == "__main__":
+    email_sender = EmailSender()
