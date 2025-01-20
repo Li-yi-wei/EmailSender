@@ -6,30 +6,12 @@ from email import encoders
 import os
 import configparser
 
-# todo 增加傳送html的功能
-
-
-# def sender(str title,st1r content):
-#     smtp = smtplib.SMTP('smtp.gmail.com', 587)
-#     smtp.ehlo()
-#     smtp.starttls()
-#     smtp.login('s1092824@gm.pu.edu.tw', 'F131381885')
-#     from_addr = 'ken355236@gmail.com'
-#     to_addr = "s1092824@gm.pu.edu.tw"
-#     msg = title + "\n" + content
-#     status = smtp.sendmail(from_addr, to_addr, msg) # 加密文件，避免私密信息被截取
-#     if status == {}:
-#         print("郵件傳送成功!")
-#     else:
-#         print("郵件傳送失敗!")
-#     smtp.quit()
-
 class EmailSender:
     def __init__(self,
             account = '',
             password = '',
-            user = 'heimdallrsys@gmail.com',
-            recipient = 'heimdallrsys@gmail.com',
+            user = '',
+            recipient = '',
             title = '',
             content = '',
             smtpSever = 'smtp.gmail.com',
@@ -77,10 +59,6 @@ class EmailSender:
             
     def send_email(self):
         
-        # smtp = smtplib.SMTP('smtp.gmail.com', 587)
-        # smtp.ehlo()
-        # smtp.starttls()
-        # smtp.login(self.account, self.password)
         self.smtp_connect()
 
         msg = MIMEMultipart()
@@ -100,7 +78,6 @@ class EmailSender:
                 msg_file.add_header(
                     'Content-Disposition',
                     f'attachment; filename="{filename}"')
-                # print(filename)
                 msg.attach(msg_file)
 
         status = self.smtp.sendmail(self.user, self.recipient, msg.as_string()) # 寄信並驗證是否傳送成功
